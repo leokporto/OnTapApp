@@ -1,0 +1,6 @@
+@OnTapApp.API_HostAddress = http://localhost:5110
+
+GET {{OnTapApp.API_HostAddress}}/beers/
+Accept: application/json
+
+###
