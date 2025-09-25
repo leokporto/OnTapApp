@@ -1,4 +1,5 @@
 
+using OnTapApp.API.Endpoints;
 using OnTapApp.API.Infrastructure;
 using OnTapApp.API.Infrastructure.Contracts;
 
@@ -33,24 +34,7 @@ public class Program
 
         app.UseAuthorization();
 
-        app.MapGet("/beers", async (IUnitOfWork unitOfWork) =>
-        {
-            return await unitOfWork.Beers.ListAsync();
-            
-        }).WithName("GetAllBeers");
-        
-        app.MapGet("/beers/styles", async (IUnitOfWork unitOfWork) =>
-        {
-            
-            return await unitOfWork.Beers.GetBeerStyles();
-        })
-        .WithName("GetBeerStyles");
-
-        app.MapGet("/beers/{id:int}", async (int id, IUnitOfWork unitOfWork) =>
-        {
-            return await unitOfWork.Beers.GetByIdAsync(id);
-
-        }).WithName("GetBeerById");
+        app.UseBeersEndpoints();
 
         app.Run();
     }
