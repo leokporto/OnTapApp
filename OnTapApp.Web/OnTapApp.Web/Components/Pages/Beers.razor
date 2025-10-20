@@ -1,0 +1,25 @@
+﻿@page "/beers"
+
+@using OnTapApp.Web.Services
+@inject BeerService beerService
+
+<PageTitle>Beers</PageTitle>
+
+<h3>Beers</h3>
+
+
+@if (AllBeers == null)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+}
+else
+{
+    <MudDataGrid T="Beer" Items="@AllBeers" Dense="true" RowsPerPage="50" Hover="true">
+        <Columns>
+            <PropertyColumn Property="x=>x.FullName" Title="Name" />
+            <PropertyColumn Property="x => x.Style" Title="Style" />
+            <PropertyColumn Property="x => x.Brewery" Title="Brewery" />                
+            <PropertyColumn Property="x => x.ABV" Title="ABV" />
+        </Columns>
+    </MudDataGrid>
+}

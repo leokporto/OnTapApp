@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper;
-using OnTapApp.API.Domain;
 using OnTapApp.API.Infrastructure.Contracts;
+using OnTapApp.Core.Entity;
 
 namespace OnTapApp.API.Infrastructure.Repository;
 

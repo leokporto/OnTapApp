@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -8,6 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="MudBlazor" Version="8.12.0" />
+        <ProjectReference Include="..\..\Aspire\OnTapApp.ServiceDefaults\OnTapApp.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\..\OnTapApp.Core\OnTapApp.Core.csproj" />
         <ProjectReference Include="..\OnTapApp.Web.Client\OnTapApp.Web.Client.csproj" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.9" />
     </ItemGroup>

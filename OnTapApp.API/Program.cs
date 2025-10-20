@@ -10,6 +10,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddServiceDefaults();
 
         string connectionString = builder.Configuration.GetConnectionString("BeersDbConnection")!;
         
@@ -23,6 +24,8 @@ public class Program
         builder.Services.AddScoped<IBeerRepository>(provider => provider.GetService<IUnitOfWork>()!.Beers);  // Opcional, para injeção direta
         
         var app = builder.Build();
+        
+        app.MapDefaultEndpoints();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -33,7 +36,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
+        
         app.UseBeersEndpoints();
 
         app.Run();

@@ -1,4 +1,6 @@
-using OnTapApp.API.Domain;
+
+
+using OnTapApp.Core.Entity;
 
 namespace OnTapApp.API.Infrastructure.Contracts;
 

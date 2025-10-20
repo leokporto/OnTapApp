@@ -1,0 +1,6 @@
+services:
+  ontapapp.api:
+    image: ${DOCKER_REGISTRY-}ontapappapi
+    build:
+      context: .
+      dockerfile: OntapApp.API/Dockerfile
