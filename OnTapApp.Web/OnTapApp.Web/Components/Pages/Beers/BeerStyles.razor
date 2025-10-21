@@ -1,0 +1,25 @@
+@page "/beers/styles"
+
+@using OnTapApp.Web.Services
+@inject BeerService BeerService
+
+<PageTitle>Beer Styles</PageTitle>
+
+<h3>Beer Styles</h3>
+
+
+@if (AllBeerStyles == null)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+}
+else
+{
+    <MudPaper>
+        <ul>
+        @foreach (var item in AllBeerStyles)
+        {
+            <li>@item</li>
+        }
+        </ul>
+    </MudPaper>
+}
