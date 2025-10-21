@@ -12,7 +12,7 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_customTheme" />
 
 <MudLayout>
     <MudAppBar Elevation="1">
@@ -37,4 +37,16 @@
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    MudTheme _customTheme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#F9C45A",
+            Secondary = "#384452",
+            AppbarBackground = "#F9C45A",
+            AppbarText = "#384452"
+        }
+        
+    };
 }
