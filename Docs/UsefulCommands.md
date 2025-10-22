@@ -16,4 +16,6 @@ This document serves as a second memory to help remember useful commands.
 
 **Restore data**
 
+No powershell execute:
+
 `docker exec -e PGPASSWORD=<password> NomeDoContainer pg_restore -U <username> -d beers_db -v /var/lib/postgresql/data/beers_db.backup;"`
