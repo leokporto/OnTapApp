@@ -11,7 +11,9 @@ var postgres = builder.AddPostgres("postgres", pgsqlUser, pgsqlPassword)
 
 var beersDb = postgres.AddDatabase("beersdb","beers_db");
 
-var keycloak = builder.AddKeycloak("keycloak", 8080)
+
+var keycloakPwd = builder.AddParameter("keycloak-password", secret: true);
+var keycloak = builder.AddKeycloak("keycloak", 8080, adminPassword: keycloakPwd)
     .WithDataVolume("keycloak")
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -20,7 +22,6 @@ var api = builder.AddProject<Projects.OnTapApp_API>("ontapapp-api")
     .WaitFor(beersDb)
     .WithReference(keycloak)
     .WaitFor(keycloak);
-    //.WithReference(beersDb);
 
 builder.AddProject<Projects.OnTapApp_Web>("ontapapp-web")
     .WithExternalHttpEndpoints()
