@@ -11,7 +11,6 @@ OnTapApp is a solution developed to manage and present information about beers a
 - **ASP.NET Core minimal APIs**
 - **Blazor** (Mixed mode)
 - **Docker** and **Docker Compose**
-- **.Net Aspire** (AppHost, ServiceDefaults)
 - **Dapper** for data access
 - **PgSql** as the database server
 
@@ -43,6 +42,14 @@ OnTapApp.sln
 
 ---
 
+## :warning: Warning
 
+The project is not intended to be used as a production application.
+
+The project will use docker compose, docker files and use all service defaults mannually. 
+The objective of this project is to learn cloud native development and deployment, not to abstract it using tools such as aspire.
+
+
+---
 > Project under development. Suggestions and contributions are welcome!
 
