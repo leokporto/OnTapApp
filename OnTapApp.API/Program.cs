@@ -10,9 +10,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.AddServiceDefaults();
 
-        string connectionString = "postgres";// builder.Configuration.GetConnectionString("BeersDbConnection")!;
+        string connectionString = builder.Configuration.GetConnectionString("BeersDbConnection")!;
         
         // Add services to the container.
         builder.Services.AddAuthorization();
@@ -20,15 +19,10 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        
-        builder.AddNpgsqlDataSource(connectionName: "beersdb");
-
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddScoped<IUnitOfWork>(provider => new UnitOfWork(connectionString));
         builder.Services.AddScoped<IBeerRepository>(provider => provider.GetService<IUnitOfWork>()!.Beers);  // Opcional, para injeção direta
         
-        var app = builder.Build();
-        
-        app.MapDefaultEndpoints();
+        var app = builder.Build();        
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

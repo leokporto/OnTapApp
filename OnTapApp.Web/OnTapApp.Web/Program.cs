@@ -1,6 +1,5 @@
-using OnTapApp.Web.Client.Pages;
-using OnTapApp.Web.Components;
 using MudBlazor.Services;
+using OnTapApp.Web.Components;
 using OnTapApp.Web.Services;
 
 namespace OnTapApp.Web;
@@ -10,7 +9,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.AddServiceDefaults();
 
         var ontapApiEndpoint = builder.Configuration["OntapAppApiEndpoint"] ?? throw new InvalidOperationException("OnTap App API is not set");
 
@@ -19,7 +17,6 @@ public class Program
         {
             client.BaseAddress = new Uri(ontapApiEndpoint);
         });
-
         
 
         // Add services to the container.
@@ -29,9 +26,7 @@ public class Program
 
         builder.Services.AddMudServices();
         
-        var app = builder.Build();
-        
-        app.MapDefaultEndpoints();
+        var app = builder.Build();        
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

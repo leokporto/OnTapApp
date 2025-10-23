@@ -12,16 +12,9 @@ public class UnitOfWork : IUnitOfWork
     private IDbTransaction? _transaction;
     private BeerRepository? _beerRepository;
 
-    //public UnitOfWork(string connectionString)
-    //{
-    //    _connection = new NpgsqlConnection(connectionString);  // Ajuste para seu DB
-    //    _connection.Open();
-    //    _transaction = _connection.BeginTransaction();
-    //}
-
-    public UnitOfWork(NpgsqlConnection connection)
+    public UnitOfWork(string connectionString)
     {
-        _connection = connection;
+        _connection = new NpgsqlConnection(connectionString);  // Ajuste para seu DB
         _connection.Open();
         _transaction = _connection.BeginTransaction();
     }
