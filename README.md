@@ -18,9 +18,6 @@ OnTapApp is a solution developed to manage and present information about beers a
 ## Project Structure
 ```
 OnTapApp.sln
-├── Aspire/
-│   ├── OnTapApp.AppHost/           # Orchestration and configuration of Aspire services
-│   └── OnTapApp.ServiceDefaults/   # Shared configurations and extensions
 ├── OnTapApp.API/                   # Main REST API (ASP.NET Core)
 │   ├── Endpoints/                  # Domain endpoints (e.g., Beers)
 │   └── Infrastructure/             # Repositories, UnitOfWork, contracts
