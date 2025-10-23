@@ -1,0 +1,30 @@
+services:
+  db:
+    volumes:
+      - ./beers_db.backup:/bkp/beers_db.backup
+
+  api:
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: 1
+    volumes:
+      - ../OnTapApp.API:/src/OnTapApp.API
+      - ~/.vsdbg:/remote_debugger:rw
+
+  web:
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: 1
+    volumes:
+      - ../OnTapApp.Web:/src/OnTapApp.Web
+
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: ontapapp-pgweb
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+    ports:
+      - "8085:8081"
+    depends_on:
+      - db
+    networks:
+      - ontapapp-net

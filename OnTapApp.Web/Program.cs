@@ -10,7 +10,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var ontapApiEndpoint = builder.Configuration["OntapAppApiEndpoint"] ?? throw new InvalidOperationException("OnTap App API is not set");
+        var ontapApiEndpoint = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("OnTap App API is not set");
+        
 
         builder.Services.AddSingleton<BeerService>();
         builder.Services.AddHttpClient<BeerService>(client =>

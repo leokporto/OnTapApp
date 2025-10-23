@@ -11,7 +11,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        string connectionString = builder.Configuration.GetConnectionString("BeersDbConnection")!;
+        
+        string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
         
         // Add services to the container.
         builder.Services.AddAuthorization();

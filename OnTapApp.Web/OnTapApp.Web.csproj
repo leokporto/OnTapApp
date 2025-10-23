@@ -5,17 +5,24 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>7ca5aa48-3073-4b68-8130-f174f0f36230</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MudBlazor" Version="8.12.0" />
-        <ProjectReference Include="..\..\OnTapApp.Core\OnTapApp.Core.csproj" />
+        <ProjectReference Include="..\OnTapApp.Core\OnTapApp.Core.csproj" />
         <ProjectReference Include="..\OnTapApp.Web.Client\OnTapApp.Web.Client.csproj" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\lib\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

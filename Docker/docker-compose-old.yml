@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  beers-db-pgsql:
+    container_name: "BeersDb_PgSql"
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "P@55w0rd"
+    ports:
+      - "5432:5432" 
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./beers_db.backup:/bkp/beers_db.backup
+
+
+

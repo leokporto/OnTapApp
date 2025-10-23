@@ -1,15 +1,53 @@
-version: '3'
+version: '3.9'
 
 services:
-  beers-db-pgsql:
-    container_name: "BeersDb_PgSql"
+  db:
     image: postgres
+    container_name: ontapapp-db    
     environment:
-      POSTGRES_PASSWORD: "P@55w0rd"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432" 
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - ontapapp-net
+
+  api:
+    build:
+      context: ..
+      dockerfile: OnTapApp.API/Dockerfile
+    container_name: ontapapp-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=db;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+    depends_on:
+      - db
+    ports:
+      - "${API_PORT}:8080" # Externo:Interno - Navegador usa 8083, containers usam 8080
+    networks:
+      - ontapapp-net
 
 
+  web:
+    build:
+      context: ..
+      dockerfile: OnTapApp.Web/Dockerfile
+    container_name: ontapapp-web
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ApiBaseUrl: "http://api:8080" # ⚠️ Sempre usar porta INTERNA entre containers
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT}:8080"
+    networks:
+      - ontapapp-net
 
+networks:
+  ontapapp-net:
+    driver: bridge
+
+  
