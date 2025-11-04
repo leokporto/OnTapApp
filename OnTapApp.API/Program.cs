@@ -14,7 +14,7 @@ public class Program
 
         builder.AddLoggingServices();
         
-        builder.AddOpenTelemetry();
+        builder.Services.AddAllElasticApm();
 
         builder.AddDefaultHealthChecks();
 
@@ -45,6 +45,7 @@ public class Program
         
         app.MapHealthEndpoints();
         app.MapBeersEndpoints();
+        app.Map("/test/log", (ILogger<Program> logger) => logger.LogError("Test log error from OnTapApp API"));
 
         app.Run();
     }

@@ -9,51 +9,23 @@ public static class LoggerExtensions
     {
         string elasticHost = builder.Configuration["ElasticSearch:Host"] ?? "http://ontap-elasticsearch:9200";
 
-        builder.Host.ConfigureServices((ctx, services) =>
-        {
+        var loggerConfig = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+            .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticHost))
+            {
+                AutoRegisterTemplate = true,
+                IndexFormat = $"ontapapp-api-logs-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy.MM}",
+                MinimumLogEventLevel = builder.Environment.IsDevelopment() ? Serilog.Events.LogEventLevel.Debug : Serilog.Events.LogEventLevel.Information
+            })
+            .WriteTo.Console();
 
-            var loggerConfig = new LoggerConfiguration()                       
-                .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticHost)))
-                .WriteTo.Console();
-            
-            string minLevel = builder.Configuration["ElasticSearch:LogLevel"] ?? "Information";
-            
-            SetMinimumLogLevel(loggerConfig, minLevel);
-
-            Log.Logger = loggerConfig.CreateLogger();
-                
-        });
+        Log.Logger = loggerConfig.CreateLogger();
 
         builder.Logging.ClearProviders();
-        builder.Logging.AddSerilog();
+        builder.Logging.AddSerilog(Log.Logger);
 
         return builder;
-    }
-    
-    private static void SetMinimumLogLevel(LoggerConfiguration loggerConfig, string minLevel)
-    {
-        switch (minLevel)
-        {
-            case "Debug":
-                loggerConfig.MinimumLevel.Debug();
-                break;
-            case "Information":
-            case "Info":
-                loggerConfig.MinimumLevel.Information();
-                break;
-            case "Warning":
-                loggerConfig.MinimumLevel.Warning();    
-                break;
-            case "Error":
-                loggerConfig.MinimumLevel.Error();
-                break;
-            case "Fatal":
-                loggerConfig.MinimumLevel.Fatal();
-                break;
-            default:
-                loggerConfig.MinimumLevel.Information();
-                break;               
-        }
     }
 }
