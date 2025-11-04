@@ -1,30 +1,17 @@
 version: '3.9'
 
 services:
-  db:
-    image: postgres
-    container_name: ontapapp-db    
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    networks:
-      - ontapapp-net
-
   api:
     build:
       context: ..
       dockerfile: OnTapApp.API/Dockerfile
     container_name: ontapapp-api
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: "Host=db;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
-    depends_on:
-      - db
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection="Host=db;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      - ElasticApm__ServerUrls=http://ontap-elasticsearch:9200
+      - ElasticApm__LogLevel=Info
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://ontap-apm-server:4317    
     ports:
       - "${API_PORT}:8080" # Externo:Interno - Navegador usa 8083, containers usam 8080
     networks:
@@ -37,12 +24,52 @@ services:
       dockerfile: OnTapApp.Web/Dockerfile
     container_name: ontapapp-web
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ApiBaseUrl: "http://api:8080" # ⚠️ Sempre usar porta INTERNA entre containers
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ApiBaseUrl="http://api:8080" # ⚠️ Sempre usar porta INTERNA entre containers
+      - ElasticApm__ServerUrls=http://ontap-elasticsearch:9200
+      - ElasticApm__LogLevel=Info
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://ontap-apm-server:4317
     depends_on:
       - api
     ports:
       - "${WEB_PORT}:8080"
+    networks:
+      - ontapapp-net
+
+  ontap-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.0
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - ontapapp-net
+
+  ontap-kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - ontap-elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - ontapapp-net
+
+  ontap-apm-server:
+    image: docker.elastic.co/apm/apm-server:7.16.0
+    container_name: ontap-apm-server
+    ports:
+      - "8200:8200"
+      - "4317:8200"
+    environment:
+      - output.elasticsearch.hosts=['http://elasticsearch:9200']
+      - apm-server.host="0.0.0.0:8200"
+      - setup.kibana.host="kibana:5601"
+    depends_on:
+      - ontap-elasticsearch
     networks:
       - ontapapp-net
 

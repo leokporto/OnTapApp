@@ -2,6 +2,7 @@
 using OnTapApp.API.Endpoints;
 using OnTapApp.API.Infrastructure;
 using OnTapApp.API.Infrastructure.Contracts;
+using OnTapApp.API.Infrastructure.CrossCutting;
 
 namespace OnTapApp.API;
 
@@ -11,6 +12,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.AddLoggingServices();
+        
+        builder.AddOpenTelemetry();
+
+        builder.AddDefaultHealthChecks();
+
+        builder.AddResiliencePolicies();
         
         string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
         
@@ -35,7 +43,8 @@ public class Program
 
         app.UseAuthorization();
         
-        app.UseBeersEndpoints();
+        app.MapHealthEndpoints();
+        app.MapBeersEndpoints();
 
         app.Run();
     }

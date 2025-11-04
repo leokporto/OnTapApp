@@ -4,7 +4,7 @@ namespace OnTapApp.API.Endpoints;
 
 public static class BeersEndpoints
 {
-    public static WebApplication UseBeersEndpoints(this WebApplication app)
+    public static WebApplication MapBeersEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/beers");
 
