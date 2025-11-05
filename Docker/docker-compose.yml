@@ -7,10 +7,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection="Host=db;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
-      - ElasticApm__ServerUrls=http://ontap-apm-server:8200
+      - ElasticApm__ServerUrls=http://apm-server:8200
       - ElasticApm__LogLevel=Information
       - ElasticApm__ServiceName="SpinTrack.API"
-      - ElasticSearch__Host=http://ontap-elasticsearch:9200
+      - ElasticSearch__Host=http://elasticsearch:9200
     ports:
       - "${API_PORT}:8080" # Externo:Interno - Navegador usa 8083, containers usam 8080
     networks:
@@ -25,10 +25,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApiBaseUrl="http://api:8080" # ⚠️ Sempre usar porta INTERNA entre containers
-      - ElasticApm__ServerUrls=http://ontap-apm-server:8200
+      - ElasticApm__ServerUrls=http://apm-server:8200
       - ElasticApm__LogLevel=Information
       - ElasticApm__ServiceName="SpinTrack.WEB"
-      - ElasticSearch__Host=http://ontap-elasticsearch:9200
+      - ElasticSearch__Host=http://elasticsearch:9200
     depends_on:
       - api
     ports:
@@ -36,7 +36,7 @@ services:
     networks:
       - ontapapp-net
 
-  ontap-elasticsearch:
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.0
     environment:
       discovery.type: single-node
@@ -47,29 +47,28 @@ services:
     networks:
       - ontapapp-net
 
-  ontap-kibana:
+  kibana:
     image: docker.elastic.co/kibana/kibana:7.16.0
     ports:
       - "5601:5601"
     depends_on:
-      - ontap-elasticsearch
+      - elasticsearch
     environment:
-      - ELASTICSEARCH_HOSTS=http://ontap-elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     networks:
       - ontapapp-net
 
-  ontap-apm-server:
-    image: docker.elastic.co/apm/apm-server:7.16.0
-    container_name: ontap-apm-server
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.16.0    
     ports:
       - "8200:8200"
       - "4317:8200"
     environment:
-      - output.elasticsearch.hosts=['http://ontap-elasticsearch:9200']
+      - output.elasticsearch.hosts=['http://elasticsearch:9200']
       - apm-server.host="0.0.0.0:8200"
-      - setup.kibana.host="ontap-kibana:5601"
+      - setup.kibana.host="kibana:5601"
     depends_on:
-      - ontap-elasticsearch
+      - elasticsearch
     networks:
       - ontapapp-net
 
