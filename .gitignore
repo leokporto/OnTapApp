@@ -3,6 +3,10 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# certificate files
+*.crt
+*.key
+
 # Docker data folder
 Docker/data/
 

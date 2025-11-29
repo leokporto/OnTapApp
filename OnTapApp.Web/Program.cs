@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using OnTapApp.Web.Components;
+using OnTapApp.Web.Internal;
 using OnTapApp.Web.Services;
 
 namespace OnTapApp.Web;
@@ -10,6 +11,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.AddLoggingServices();
+
+        builder.AddResiliencePolicies();
+        
+        builder.Services.AddAllElasticApm();
+        
         var ontapApiEndpoint = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("OnTap App API is not set");
         
 
