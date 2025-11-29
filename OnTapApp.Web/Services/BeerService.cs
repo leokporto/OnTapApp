@@ -10,7 +10,7 @@ internal sealed class BeerService(HttpClient httpClient, ILogger<BeerService> lo
 
         try
         {
-            var response = await httpClient.GetAsync("/beers");
+            var response = await httpClient.GetAsync("beers");
 
             var responseText = await response.Content.ReadAsStringAsync();
 
@@ -36,7 +36,7 @@ internal sealed class BeerService(HttpClient httpClient, ILogger<BeerService> lo
 
         try
         {
-            var response = await httpClient.GetAsync("/beers/styles");
+            var response = await httpClient.GetAsync("beers/styles");
 
             var responseText = await response.Content.ReadAsStringAsync();
 

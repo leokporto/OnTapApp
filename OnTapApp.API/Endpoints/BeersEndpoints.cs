@@ -6,7 +6,8 @@ public static class BeersEndpoints
 {
     public static WebApplication MapBeersEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/beers");
+        var group = app.MapGroup("/beers")
+            .RequireAuthorization();
 
         group.MapGet("/", async (IUnitOfWork unitOfWork) =>
         {

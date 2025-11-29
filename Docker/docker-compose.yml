@@ -12,6 +12,7 @@ services:
       - ElasticApm__LogLevel=Information
       - ElasticApm__ServiceName=OnTap.API
       - ElasticSearch__Host=http://elasticsearch:9200
+      - Google__ClientId=${GOOGLE_CLIENT_ID}
     ports:
       - "${API_PORT}:8080" # Externo:Interno - Navegador usa 8083, containers usam 8080
     networks:
@@ -30,6 +31,8 @@ services:
       - ElasticApm__LogLevel=Information
       - ElasticApm__ServiceName=OnTap.WEB
       - ElasticSearch__Host=http://elasticsearch:9200
+      - Google__ClientId=${GOOGLE_CLIENT_ID}
+      - Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
     depends_on:
       - api
     ports:
